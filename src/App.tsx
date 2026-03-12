@@ -12,7 +12,7 @@ import { ExamplePoems } from './components/ExamplePoems';
 import { PlaybackModal } from './components/PlaybackModal';
 import { BootSequence } from './components/BootSequence';
 import { analyzePoem } from './utils/poem';
-import { startRetroMusicLoop, stopRetroMusicLoop } from './utils/sound';
+import { playBootLoadingSound, startRetroMusicLoop, stopRetroMusicLoop } from './utils/sound';
 
 const READY_MESSAGE = 'Press Play My Poem to watch the magic.';
 
@@ -85,6 +85,10 @@ export default function App() {
       return;
     }
 
+    if (soundEnabled) {
+      playBootLoadingSound();
+    }
+
     setStagedPoem(poem);
     setIsPlaybackOpen(true);
     setPlayVersion((value) => value + 1);
@@ -109,12 +113,20 @@ export default function App() {
     setPromptIndex((value) => (value + 1) % PROMPTS.length);
   }
 
+  function handleTitleStart() {
+    if (soundEnabled) {
+      startRetroMusicLoop();
+    }
+
+    setScreen('boot');
+  }
+
   return (
     <RetroFrame theme={theme}>
       {screen === 'title' ? (
-        <TitleScreen onStart={() => setScreen('boot')} />
+        <TitleScreen onStart={handleTitleStart} />
       ) : screen === 'boot' ? (
-        <BootSequence onDone={() => setScreen('editor')} />
+        <BootSequence onDone={() => setScreen('editor')} soundEnabled={soundEnabled} />
       ) : (
         <main className="app-grid">
           <header className="topbar">

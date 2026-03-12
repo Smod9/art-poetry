@@ -25,9 +25,9 @@ class RetroMusicLoop {
     110, 110, 123.47, 123.47, 146.83, 146.83, 164.81, 164.81,
   ];
 
-  start() {
+  private ensureAudio() {
     if (!AUDIO_LOOKUP) {
-      return;
+      return false;
     }
 
     if (!this.context) {
@@ -50,12 +50,25 @@ class RetroMusicLoop {
       );
     }
 
+    return true;
+  }
+
+  start() {
+    if (!this.ensureAudio()) {
+      return;
+    }
+
+    const context = this.context;
+    if (!context) {
+      return;
+    }
+
     if (this.schedulerId !== null) {
       return;
     }
 
     this.step = 0;
-    this.nextNoteTime = this.context.currentTime + 0.02;
+    this.nextNoteTime = context.currentTime + 0.02;
     this.schedulerId = window.setInterval(() => this.scheduleNotes(), this.scheduleEveryMs);
   }
 
@@ -119,6 +132,23 @@ class RetroMusicLoop {
     oscillator.start(startTime);
     oscillator.stop(startTime + duration + 0.02);
   }
+
+  playBootJingle() {
+    if (!this.ensureAudio() || !this.context) {
+      return;
+    }
+
+    const startAt = this.context.currentTime + 0.02;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+
+    notes.forEach((note, index) => {
+      const time = startAt + index * 0.12;
+      this.playVoice(note, time, 0.12, 'square', 0.018);
+      if (index > 0) {
+        this.playVoice(note / 2, time, 0.1, 'triangle', 0.01);
+      }
+    });
+  }
 }
 
 const retroMusicLoop = new RetroMusicLoop();
@@ -129,4 +159,8 @@ export function startRetroMusicLoop() {
 
 export function stopRetroMusicLoop() {
   retroMusicLoop.stop();
+}
+
+export function playBootLoadingSound() {
+  retroMusicLoop.playBootJingle();
 }

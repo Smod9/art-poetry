@@ -677,9 +677,9 @@ textarea {
 .poem-stage__cloud,
 .poem-stage__arc,
 .poem-stage__stars,
-.poem-stage__tree,
+.poem-stage__tree-item,
 .poem-stage__grassline,
-.poem-stage__flower-bed {
+.poem-stage__flower-item {
   position: absolute;
 }
 
@@ -771,16 +771,32 @@ textarea {
   letter-spacing: 16px;
 }
 
-.poem-stage__tree {
-  left: 26px;
-  bottom: 30px;
+.poem-stage__tree-item {
+  bottom: 24px;
   width: 38px;
   height: 84px;
+  transform: translateX(-50%);
 }
 
-.poem-stage__tree::before {
-  content: '';
+.poem-stage__tree-top,
+.poem-stage__tree-trunk,
+.poem-stage__flower-petal,
+.poem-stage__flower-center,
+.poem-stage__flower-stem {
   position: absolute;
+}
+
+.poem-stage__tree-top {
+  left: 50%;
+  top: 0;
+  width: 38px;
+  height: 42px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #7ad676, #4e9f4f);
+}
+
+.poem-stage__tree-trunk {
   left: 50%;
   bottom: 0;
   width: 10px;
@@ -788,18 +804,6 @@ textarea {
   transform: translateX(-50%);
   border-radius: 8px;
   background: #8a5a3a;
-}
-
-.poem-stage__tree::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 38px;
-  height: 42px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, #6fcb71, #4b9a4e);
 }
 
 .poem-stage__grassline {
@@ -820,39 +824,58 @@ textarea {
   opacity: 0.78;
 }
 
-.poem-stage__flower-bed {
-  right: 32px;
-  bottom: 18px;
-  width: 78px;
-  height: 56px;
+.poem-stage__flower-item {
+  bottom: 16px;
+  width: 24px;
+  height: 46px;
+  transform: translateX(-50%);
 }
 
-.poem-stage__flower-bed::before,
-.poem-stage__flower-bed::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-}
-
-.poem-stage__flower-bed::before {
-  left: 10px;
-  width: 4px;
-  height: 34px;
-  background: #4f9d4c;
-  box-shadow:
-    20px 4px 0 0 #4f9d4c,
-    40px -2px 0 0 #4f9d4c;
-}
-
-.poem-stage__flower-bed::after {
-  left: 0;
-  width: 14px;
-  height: 14px;
+.poem-stage__flower-petal {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: #ff86b3;
-  box-shadow:
-    20px 6px 0 0 #ffd25e,
-    40px -2px 0 0 #ffa37b;
+  background: #ff9cc2;
+}
+
+.poem-stage__flower-item:nth-of-type(odd) .poem-stage__flower-petal {
+  background: #ffb4d5;
+}
+
+.poem-stage__flower-petal--top {
+  left: 50%;
+  top: 2px;
+  transform: translateX(-50%);
+}
+
+.poem-stage__flower-petal--left {
+  left: 2px;
+  top: 10px;
+}
+
+.poem-stage__flower-petal--right {
+  right: 2px;
+  top: 10px;
+}
+
+.poem-stage__flower-center {
+  left: 50%;
+  top: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: #fff0a2;
+}
+
+.poem-stage__flower-stem {
+  left: 50%;
+  bottom: 0;
+  width: 4px;
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #5ba956;
 }
 
 .poem-stage__combo-strip {
@@ -1559,12 +1582,12 @@ textarea {
 }
 
 .fx--seed {
-  inset: -16px;
+  inset: -12px -16px -4px -16px;
 }
 
 .fx__seed-dot {
   left: 50%;
-  top: 40%;
+  top: 48%;
   width: 0.26em;
   height: 0.38em;
   border-radius: 50%;
@@ -1575,9 +1598,9 @@ textarea {
 
 .fx__seed-sprout {
   left: 50%;
-  bottom: 0;
-  width: 0.14em;
-  height: 0.72em;
+  bottom: 0.38em;
+  width: 0.11em;
+  height: 0.62em;
   transform: translateX(-50%);
   background: #54a552;
   border-radius: 999px;
@@ -1588,21 +1611,21 @@ textarea {
 .fx__seed-sprout::after {
   content: '';
   position: absolute;
-  top: 0.12em;
-  width: 0.36em;
-  height: 0.18em;
-  border-radius: 999px 999px 0 999px;
+  top: 0.1em;
+  width: 0.28em;
+  height: 0.16em;
+  border-radius: 999px 999px 999px 0;
   background: #70c66e;
 }
 
 .fx__seed-sprout::before {
-  right: 0.08em;
-  transform: rotate(-28deg);
+  right: 0.04em;
+  transform: rotate(-32deg);
 }
 
 .fx__seed-sprout::after {
-  left: 0.08em;
-  transform: rotate(28deg) scaleX(-1);
+  left: 0.04em;
+  transform: rotate(32deg) scaleX(-1);
 }
 
 .fx--tree {
@@ -1661,8 +1684,8 @@ textarea {
 }
 
 .fx--grass {
-  inset: auto -8px -0.22em -8px;
-  height: 0.8em;
+  inset: auto -8px 0.24em -8px;
+  height: 0.68em;
 }
 
 .fx--grass span {
@@ -1670,7 +1693,7 @@ textarea {
   bottom: 0;
   width: 0.13em;
   border-radius: 999px;
-  background: #5eaf58;
+  background: #81c96d;
   transform-origin: bottom center;
   animation: bladeRise 820ms ease-out;
 }

@@ -134,6 +134,18 @@ export function PoemStage({
       .join(' ');
   }
 
+  const treeCount = Math.min(4, poemAnalysis.wordCounts.tree ?? 0);
+  const flowerCount = Math.min(
+    5,
+    Math.max(
+      poemAnalysis.atmosphere.bloom ? 1 : 0,
+      (poemAnalysis.wordCounts.flower ?? 0) + (poemAnalysis.wordCounts.bloom ?? 0),
+    ),
+  );
+
+  const treePositions = ['10%', '24%', '76%', '88%'];
+  const flowerPositions = ['18%', '34%', '50%', '66%', '82%'];
+
   return (
     <section className={`poem-stage poem-stage--${variant}`}>
       {variant === 'inline' ? (
@@ -168,9 +180,34 @@ export function PoemStage({
             <span className="poem-stage__stars" />
           ) : null}
           {poemAnalysis.atmosphere.rainbow ? <span className="poem-stage__arc" /> : null}
-          {poemAnalysis.atmosphere.tree ? <span className="poem-stage__tree" /> : null}
+          {treeCount > 0
+            ? Array.from({ length: treeCount }).map((_, index) => (
+                <span
+                  className="poem-stage__tree-item"
+                  key={`tree-${index}`}
+                  style={{ left: treePositions[index] }}
+                >
+                  <span className="poem-stage__tree-top" />
+                  <span className="poem-stage__tree-trunk" />
+                </span>
+              ))
+            : null}
           {poemAnalysis.atmosphere.grass ? <span className="poem-stage__grassline" /> : null}
-          {poemAnalysis.atmosphere.bloom ? <span className="poem-stage__flower-bed" /> : null}
+          {flowerCount > 0
+            ? Array.from({ length: flowerCount }).map((_, index) => (
+                <span
+                  className="poem-stage__flower-item"
+                  key={`flower-${index}`}
+                  style={{ left: flowerPositions[index] }}
+                >
+                  <span className="poem-stage__flower-petal poem-stage__flower-petal--top" />
+                  <span className="poem-stage__flower-petal poem-stage__flower-petal--left" />
+                  <span className="poem-stage__flower-petal poem-stage__flower-petal--right" />
+                  <span className="poem-stage__flower-center" />
+                  <span className="poem-stage__flower-stem" />
+                </span>
+              ))
+            : null}
         </div>
 
         {poemAnalysis.combos.length > 0 ? (

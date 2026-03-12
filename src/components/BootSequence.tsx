@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { playBootLoadingSound } from '../utils/sound';
 
 interface BootSequenceProps {
   onDone: () => void;
+  soundEnabled: boolean;
 }
 
 const BOOT_LINES = [
@@ -11,10 +13,14 @@ const BOOT_LINES = [
   'Waking tiny splashes...',
 ];
 
-export function BootSequence({ onDone }: BootSequenceProps) {
+export function BootSequence({ onDone, soundEnabled }: BootSequenceProps) {
   const [visibleLines, setVisibleLines] = useState(1);
 
   useEffect(() => {
+    if (soundEnabled) {
+      playBootLoadingSound();
+    }
+
     const timers = BOOT_LINES.map((_, index) =>
       window.setTimeout(() => setVisibleLines(index + 1), index * 260),
     );
@@ -24,7 +30,7 @@ export function BootSequence({ onDone }: BootSequenceProps) {
       timers.forEach((timer) => window.clearTimeout(timer));
       window.clearTimeout(doneTimer);
     };
-  }, [onDone]);
+  }, [onDone, soundEnabled]);
 
   return (
     <section className="boot-screen panel" aria-live="polite">
