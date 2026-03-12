@@ -1,3 +1,7 @@
+import { CurrentWordPreview } from '../types';
+import { HelperBuddy } from './HelperBuddy';
+import { MagicTypingPreview } from './MagicTypingPreview';
+
 interface PoetryEditorProps {
   poem: string;
   onPoemChange: (value: string) => void;
@@ -7,6 +11,10 @@ interface PoetryEditorProps {
   rewardMessage: string;
   themeLabel: string;
   onToggleTheme: () => void;
+  helperMessage: string;
+  meterValue: number;
+  meterLabel: string;
+  currentWord: CurrentWordPreview | null;
 }
 
 export function PoetryEditor({
@@ -18,6 +26,10 @@ export function PoetryEditor({
   rewardMessage,
   themeLabel,
   onToggleTheme,
+  helperMessage,
+  meterValue,
+  meterLabel,
+  currentWord,
 }: PoetryEditorProps) {
   return (
     <section className="panel editor-panel">
@@ -28,9 +40,6 @@ export function PoetryEditor({
             Try words like splash, twinkle, boom, flutter, rainbow...
           </p>
         </div>
-        <button className="button button--secondary" onClick={onToggleTheme} type="button">
-          Theme: {themeLabel}
-        </button>
       </div>
 
       <label className="sr-only" htmlFor="poem-input">
@@ -55,6 +64,24 @@ export function PoetryEditor({
         <button className="button button--secondary" onClick={onTryExample} type="button">
           Try an Example
         </button>
+      </div>
+
+      <div className="editor-panel__extras">
+        <MagicTypingPreview currentWord={currentWord} />
+
+        <div className="helper-buddy helper-buddy--inline">
+          <HelperBuddy
+            helperMessage={helperMessage}
+            meterValue={meterValue}
+            meterLabel={meterLabel}
+          />
+
+          <div className="editor-panel__mini-actions">
+            <button className="button button--secondary" onClick={onToggleTheme} type="button">
+              Theme: {themeLabel}
+            </button>
+          </div>
+        </div>
       </div>
 
       <p className="reward-banner" role="status">

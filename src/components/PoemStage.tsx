@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { parsePoemLines, getMagicWord, buildRewardMessage } from '../utils/poem';
+import { PoemAnalysis } from '../types';
+import { parsePoemLines, getMagicWord, buildRewardMessage, analyzePoem } from '../utils/poem';
 import { AnimatedWord } from './AnimatedWord';
 
 interface PoemStageProps {
@@ -7,6 +8,8 @@ interface PoemStageProps {
   playVersion: number;
   reducedMotion: boolean;
   onPlaybackDone: (reward: string) => void;
+  variant?: 'inline' | 'modal';
+  analysis?: PoemAnalysis;
 }
 
 export function PoemStage({
@@ -14,8 +17,11 @@ export function PoemStage({
   playVersion,
   reducedMotion,
   onPlaybackDone,
+  variant = 'inline',
+  analysis,
 }: PoemStageProps) {
   const parsedLines = useMemo(() => parsePoemLines(poem), [poem]);
+  const poemAnalysis = useMemo(() => analysis ?? analyzePoem(poem), [analysis, poem]);
   const [visibleLines, setVisibleLines] = useState(0);
 
   useEffect(() => {
@@ -72,19 +78,74 @@ export function PoemStage({
     return Array.from(found);
   }, [parsedLines]);
 
-  return (
-    <section className="panel poem-stage">
-      <div className="panel__row">
-        <p className="panel__label">Poem Player</p>
-        <p className="poem-stage__status">
-          {poem.trim() ? 'Press Play My Poem to replay anytime.' : 'Your poem will appear here.'}
-        </p>
-      </div>
+  const atmosphereClasses = [
+    poemAnalysis.atmosphere.rain ? 'poem-stage__screen--rainy' : '',
+    poemAnalysis.atmosphere.snow ? 'poem-stage__screen--snowy' : '',
+    poemAnalysis.atmosphere.sun ? 'poem-stage__screen--sunny' : '',
+    poemAnalysis.atmosphere.moon ? 'poem-stage__screen--moonlit' : '',
+    poemAnalysis.atmosphere.rainbow ? 'poem-stage__screen--rainbow' : '',
+    poemAnalysis.atmosphere.twinkle ? 'poem-stage__screen--starry' : '',
+    poemAnalysis.atmosphere.sleepy ? 'poem-stage__screen--sleepy' : '',
+    poemAnalysis.atmosphere.boom ? 'poem-stage__screen--boom' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
+  function getLineClasses(lineIndex: number) {
+    const line = parsedLines[lineIndex];
+    const words = line.map((token) => token.normalized).filter(Boolean);
+
+    return [
+      words.includes('wave') ? 'poem-line--wave-line' : '',
+      words.includes('echo') ? 'poem-line--echo-line' : '',
+      words.includes('boom') ? 'poem-line--boom-line' : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  return (
+    <section className={`poem-stage poem-stage--${variant}`}>
+      {variant === 'inline' ? (
+        <div className="panel__row">
+          <p className="panel__label">Poem Player</p>
+          <p className="poem-stage__status">
+            {poem.trim() ? 'Press Play My Poem to replay anytime.' : 'Your poem will appear here.'}
+          </p>
+        </div>
+      ) : null}
       <div
-        className={`poem-stage__screen ${reducedMotion ? 'poem-stage__screen--reduced' : ''}`}
+        className={[
+          'poem-stage__screen',
+          reducedMotion ? 'poem-stage__screen--reduced' : '',
+          variant === 'modal' ? 'poem-stage__screen--modal' : '',
+          atmosphereClasses,
+        ]
+          .filter(Boolean)
+          .join(' ')}
         aria-live="polite"
       >
+        <div className="poem-stage__atmosphere" aria-hidden="true">
+          {poemAnalysis.atmosphere.sun ? <span className="poem-stage__sun" /> : null}
+          {poemAnalysis.atmosphere.moon ? <span className="poem-stage__moon" /> : null}
+          {poemAnalysis.atmosphere.rain ? <span className="poem-stage__cloud poem-stage__cloud--left" /> : null}
+          {poemAnalysis.atmosphere.rain ? <span className="poem-stage__cloud poem-stage__cloud--right" /> : null}
+          {poemAnalysis.atmosphere.twinkle || poemAnalysis.atmosphere.happy ? (
+            <span className="poem-stage__stars" />
+          ) : null}
+          {poemAnalysis.atmosphere.rainbow ? <span className="poem-stage__arc" /> : null}
+        </div>
+
+        {poemAnalysis.combos.length > 0 ? (
+          <div className="poem-stage__combo-strip" aria-hidden="true">
+            {poemAnalysis.combos.slice(0, 2).map((combo) => (
+              <span className="poem-stage__combo-badge" key={combo.id}>
+                {combo.label}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
         {stageEffects.map((effect) => (
           <span
             key={`${effect}-${playVersion}`}
@@ -96,7 +157,13 @@ export function PoemStage({
         {poem.trim() ? (
           parsedLines.map((line, lineIndex) => (
             <p
-              className={`poem-line ${lineIndex < visibleLines ? 'poem-line--visible' : ''}`}
+              className={[
+                'poem-line',
+                lineIndex < visibleLines ? 'poem-line--visible' : '',
+                getLineClasses(lineIndex),
+              ]
+                .filter(Boolean)
+                .join(' ')}
               key={`${playVersion}-${lineIndex}`}
             >
               {lineIndex < visibleLines
@@ -106,6 +173,9 @@ export function PoemStage({
                       token={token}
                       trigger={getMagicWord(token.normalized)}
                       reducedMotion={reducedMotion}
+                      repeatCount={
+                        token.normalized ? poemAnalysis.wordCounts[token.normalized] ?? 1 : 1
+                      }
                     />
                   ))
                 : '\u00A0'}

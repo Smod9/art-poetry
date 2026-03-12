@@ -155,6 +155,12 @@ textarea {
   flex-wrap: wrap;
 }
 
+.topbar__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .topbar__tiny,
 .panel__label,
 .title-screen__eyebrow {
@@ -330,6 +336,54 @@ textarea {
   animation-delay: 800ms;
 }
 
+.boot-screen {
+  min-height: calc(100vh - 96px);
+  display: grid;
+  place-items: center;
+  gap: 18px;
+  text-align: center;
+}
+
+.boot-screen__monitor {
+  width: min(100%, 560px);
+  padding: 22px;
+  border: 4px solid #1b5262;
+  border-radius: 22px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.06) 2px,
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    ),
+    linear-gradient(180deg, #173f52, #102d3c);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.12);
+}
+
+.boot-screen__line {
+  margin: 0 0 12px;
+  min-height: 1.4rem;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+  color: #d9fff0;
+}
+
+.boot-screen__bar {
+  height: 18px;
+  margin-top: 18px;
+  border: 2px solid rgba(217, 255, 240, 0.45);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.boot-screen__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #68ffd6, #9be9ff);
+  transition: width 220ms ease;
+}
+
 .poem-input {
   width: 100%;
   min-height: 230px;
@@ -342,6 +396,107 @@ textarea {
   font-size: 1.3rem;
   line-height: 1.6;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.editor-panel__extras {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 14px;
+}
+
+.editor-panel__mini-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.typing-preview,
+.helper-buddy {
+  display: grid;
+  gap: 12px;
+}
+
+.typing-preview__word {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  color: #15465a;
+}
+
+.typing-preview__word span {
+  display: inline-block;
+  padding: 10px 14px;
+  border: 3px solid rgba(58, 85, 102, 0.24);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.typing-preview__word--magic {
+  background: linear-gradient(180deg, rgba(255, 245, 188, 0.95), rgba(255, 255, 255, 0.84)) !important;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(247, 193, 79, 0.28);
+}
+
+.helper-buddy--inline {
+  display: grid;
+  gap: 12px;
+}
+
+.helper-buddy__top {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.helper-buddy__avatar {
+  width: 62px;
+  height: 62px;
+  border: 3px solid var(--border);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #fff6cf, #f8d67d);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7);
+}
+
+.helper-buddy__avatar span {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  color: #18455a;
+  animation: bob 2s ease-in-out infinite;
+}
+
+.helper-buddy__message {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.magic-meter {
+  display: grid;
+  gap: 8px;
+}
+
+.button--speaker {
+  min-width: 148px;
+}
+
+.magic-meter__bar {
+  height: 18px;
+  border: 3px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+
+.magic-meter__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+  box-shadow: 0 0 20px rgba(62, 165, 197, 0.35);
+  transition: width 240ms ease;
 }
 
 .reward-banner {
@@ -401,20 +556,85 @@ textarea {
   min-height: 360px;
 }
 
+.poem-stage--modal {
+  display: grid;
+}
+
+.poem-stage__screen--modal {
+  min-height: min(68vh, 720px);
+  padding: 34px;
+  border-width: 5px;
+  border-radius: 28px;
+}
+
+.poem-stage__screen--rainy {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #b9dcef, #84bbd7);
+}
+
+.poem-stage__screen--snowy {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #d9f3ff, #b7d5e9);
+}
+
+.poem-stage__screen--sunny {
+  background:
+    linear-gradient(180deg, rgba(255, 249, 196, 0.22), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #d8f2ea, #a8dce5);
+}
+
+.poem-stage__screen--moonlit {
+  background:
+    linear-gradient(180deg, rgba(220, 229, 255, 0.18), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, #b6d1ed, #8ca8d2);
+}
+
+.poem-stage__screen--rainbow {
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.45),
+    0 0 0 6px rgba(255, 126, 168, 0.08);
+}
+
+.poem-stage__screen--sleepy::before,
+.poem-stage__screen--starry::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.75) 0 2px, transparent 3px),
+    radial-gradient(circle at 72% 14%, rgba(255, 255, 255, 0.65) 0 2px, transparent 3px),
+    radial-gradient(circle at 60% 28%, rgba(255, 255, 255, 0.65) 0 2px, transparent 3px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.poem-stage__screen--boom {
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.45),
+    0 0 0 5px rgba(245, 139, 183, 0.12);
+}
+
 .poem-stage__screen::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.28), transparent 40%),
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 40%),
     repeating-linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 0.08),
-      rgba(255, 255, 255, 0.08) 2px,
-      rgba(9, 42, 58, 0.03) 2px,
-      rgba(9, 42, 58, 0.03) 4px
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 2px,
+      rgba(9, 42, 58, 0.015) 2px,
+      rgba(9, 42, 58, 0.015) 4px
     );
   pointer-events: none;
+  opacity: 0.65;
+}
+
+.poem-stage__screen--modal::after {
+  opacity: 0.38;
 }
 
 .poem-stage__placeholder {
@@ -426,6 +646,130 @@ textarea {
   text-align: center;
   color: #1b5262;
   font-size: 1.15rem;
+}
+
+.poem-stage__atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.poem-stage__sun,
+.poem-stage__moon,
+.poem-stage__cloud,
+.poem-stage__arc,
+.poem-stage__stars {
+  position: absolute;
+}
+
+.poem-stage__sun {
+  top: 18px;
+  right: 26px;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 217, 110, 0.95), rgba(247, 217, 110, 0.08));
+  box-shadow: 0 0 32px rgba(247, 217, 110, 0.34);
+}
+
+.poem-stage__moon {
+  top: 24px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow:
+    -12px 0 0 0 rgba(255, 255, 255, 0.86),
+    -4px 0 0 0 rgba(183, 213, 233, 0.95);
+}
+
+.poem-stage__cloud {
+  top: 26px;
+  width: 82px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.48);
+  filter: blur(0.4px);
+}
+
+.poem-stage__cloud::before,
+.poem-stage__cloud::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.poem-stage__cloud::before {
+  width: 28px;
+  height: 28px;
+  left: 14px;
+  top: -10px;
+}
+
+.poem-stage__cloud::after {
+  width: 34px;
+  height: 34px;
+  right: 10px;
+  top: -14px;
+}
+
+.poem-stage__cloud--left {
+  left: 22px;
+}
+
+.poem-stage__cloud--right {
+  right: 120px;
+}
+
+.poem-stage__arc {
+  top: 36px;
+  left: 26px;
+  width: 120px;
+  height: 62px;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 90px;
+  border: 6px solid transparent;
+  border-top-color: #ff7ea8;
+  box-shadow:
+    0 -6px 0 0 #f7d96e,
+    0 -12px 0 0 #89d8ff;
+  opacity: 0.88;
+}
+
+.poem-stage__stars {
+  inset: 0;
+}
+
+.poem-stage__stars::before {
+  content: '✦ ✧ ✦';
+  position: absolute;
+  left: 24px;
+  top: 18px;
+  color: rgba(255, 255, 255, 0.84);
+  letter-spacing: 16px;
+}
+
+.poem-stage__combo-strip {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.poem-stage__combo-badge {
+  padding: 6px 10px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(19, 61, 83, 0.24);
+  color: #fffef0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
 }
 
 .poem-line {
@@ -442,6 +786,137 @@ textarea {
   transition: opacity 240ms ease, transform 240ms ease;
 }
 
+.poem-stage__screen--modal .poem-line {
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  min-height: 3.4rem;
+  margin-bottom: 18px;
+}
+
+.poem-line--wave-line {
+  animation: waveLine 1400ms ease-in-out;
+}
+
+.poem-line--echo-line {
+  text-shadow: 0.1em 0.08em rgba(255, 255, 255, 0.16);
+}
+
+.poem-line--boom-line {
+  letter-spacing: 0.04em;
+}
+
+.playback-preview {
+  display: grid;
+  gap: 14px;
+}
+
+.playback-preview__message {
+  margin-top: 4px;
+}
+
+.playback-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.playback-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.12), transparent 36%),
+    rgba(16, 36, 48, 0.68);
+  backdrop-filter: blur(6px);
+}
+
+.playback-modal__window {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 100%);
+  max-height: calc(100vh - 40px);
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.08)),
+    var(--panel);
+  box-shadow:
+    0 24px 60px rgba(18, 41, 53, 0.34),
+    0 0 0 6px rgba(255, 255, 255, 0.16);
+  animation: modalPop 180ms ease-out;
+}
+
+.playback-modal__header {
+  align-items: flex-start;
+}
+
+.playback-modal__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.playback-modal__footer {
+  display: grid;
+  gap: 14px;
+}
+
+.reward-card {
+  padding: 16px;
+  border: 3px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 252, 227, 0.94), rgba(255, 255, 255, 0.84));
+}
+
+.reward-card__badge,
+.reward-card__title,
+.reward-card__text {
+  margin: 0;
+}
+
+.reward-card__badge {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.16em;
+  font-size: 0.76rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.reward-card__title {
+  margin-top: 6px;
+  font-size: 1.35rem;
+}
+
+.reward-card__text + .reward-card__text {
+  margin-top: 4px;
+}
+
+.sticker-shelf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sticker-shelf__item {
+  padding: 10px 14px;
+  border: 3px solid var(--border);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fffef6, #f3e9bf);
+  font-family: 'Courier New', monospace;
+  font-size: 0.84rem;
+  transform: rotate(-2deg);
+}
+
+.sticker-shelf__item:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.sticker-shelf__item--combo {
+  background: linear-gradient(180deg, #ffe7f1, #fffef6);
+}
+
 .poem-line--visible {
   opacity: 1;
   transform: translateY(0);
@@ -455,6 +930,16 @@ textarea {
 
 .poem-token--magic {
   padding: 0 2px;
+}
+
+.poem-token--charged .poem-token__text {
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.34);
+}
+
+.poem-token--super-charged .poem-token__text {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.5),
+    0 0 24px rgba(255, 255, 255, 0.28);
 }
 
 .poem-token__text {
@@ -481,7 +966,8 @@ textarea {
     0 -6px 0 0 #f7d96e,
     0 -12px 0 0 #89d8ff,
     0 -18px 0 0 rgba(255, 255, 255, 0.65);
-  animation: stageFade 1600ms ease-out both;
+  animation: stageFade 1200ms ease-out both;
+  opacity: 0.72;
 }
 
 .stage-burst--rain,
@@ -499,7 +985,8 @@ textarea {
     radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 1px, transparent 2px),
     radial-gradient(circle, rgba(255, 255, 255, 0.85) 0 1px, transparent 2px);
   background-size: 120px 120px;
-  animation: rainStage 1800ms linear both;
+  animation: rainStage 1600ms linear both;
+  opacity: 0.42;
 }
 
 .stage-burst--snow::before {
@@ -514,7 +1001,8 @@ textarea {
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  animation: stagePulse 900ms ease-out both;
+  animation: stagePulse 700ms ease-out both;
+  opacity: 0.45;
 }
 
 .stage-burst--splash {
@@ -841,10 +1329,10 @@ textarea {
 @keyframes stageFade {
   from {
     opacity: 0;
-    transform: scale(0.85);
+    transform: scale(0.92);
   }
   to {
-    opacity: 1;
+    opacity: 0.72;
     transform: scale(1);
   }
 }
@@ -852,14 +1340,14 @@ textarea {
 @keyframes stagePulse {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.4);
+    transform: translate(-50%, -50%) scale(0.7);
   }
   35% {
-    opacity: 1;
+    opacity: 0.45;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(1.4);
+    transform: translate(-50%, -50%) scale(1.1);
   }
 }
 
@@ -1182,8 +1670,36 @@ textarea {
   }
 }
 
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes waveLine {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
 @media (max-width: 980px) {
   .app-grid__main {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-panel__extras {
     grid-template-columns: 1fr;
   }
 }
@@ -1212,6 +1728,11 @@ textarea {
   .poem-stage__screen {
     min-height: 290px;
     padding: 16px;
+  }
+
+  .poem-stage__screen--modal {
+    min-height: 58vh;
+    padding: 20px;
   }
 }
 

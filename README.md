@@ -5,9 +5,12 @@ Magic Words is a single-page React + TypeScript poetry toy for kids. Children ty
 ## Features
 
 - Retro 1980s classroom-computer inspired title screen and writing interface
+- Brief retro boot-up transition into the notebook
 - Large poem editor with `Play My Poem`, `Clear`, `Try an Example`, and `Surprise Me`
-- Line-by-line playback in a pixel-flavored poem stage
+- Big modal poem theater for line-by-line playback
 - 20 built-in magic words with gentle inline animations
+- Reactive stage atmosphere, combo reactions, helper prompts, and typing previews
+- Sticker-style rewards, a magic meter, and optional retro blip sounds
 - 8 starter poems and rotating writing prompts
 - Two visual themes: `Computer Lab` and `Rainbow Terminal`
 - Reduced-motion support for accessibility

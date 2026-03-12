@@ -1,5 +1,13 @@
 import { MAGIC_WORD_MAP } from '../data/magicWords';
-import { MagicWordDefinition, ParsedToken } from '../types';
+import { MAGIC_COMBOS, REWARD_LIBRARY } from '../data/poemPlay';
+import {
+  CurrentWordPreview,
+  MagicCombo,
+  MagicWordDefinition,
+  ParsedToken,
+  PoemAnalysis,
+  RewardCard,
+} from '../types';
 
 const TOKEN_REGEX = /(\s+|[\p{L}]+(?:'[\p{L}]+)?|[^\s\p{L}]+)/gu;
 
@@ -60,4 +68,153 @@ export function buildRewardMessage(poem: string): string {
   }
 
   return `Lovely poem! Magic words found: ${magicCount}`;
+}
+
+export function getWordCounts(poem: string): Record<string, number> {
+  return parsePoemLines(poem)
+    .flat()
+    .reduce<Record<string, number>>((counts, token) => {
+      if (token.type !== 'word' || !token.normalized) {
+        return counts;
+      }
+
+      counts[token.normalized] = (counts[token.normalized] ?? 0) + 1;
+      return counts;
+    }, {});
+}
+
+export function getCurrentWordPreview(poem: string): CurrentWordPreview | null {
+  const match = poem.match(/([\p{L}']+)$/u);
+
+  if (!match) {
+    return null;
+  }
+
+  const value = match[1];
+  const normalized = value.toLowerCase();
+  const trigger = getMagicWord(normalized);
+
+  if (trigger) {
+    return {
+      value,
+      trigger,
+      hint: `${trigger.word} is ready for ${trigger.hint}.`,
+    };
+  }
+
+  return {
+    value,
+    trigger: null,
+    hint: 'Keep typing. A magic word can wake up the page.',
+  };
+}
+
+export function findMagicCombos(wordCounts: Record<string, number>): MagicCombo[] {
+  return MAGIC_COMBOS.filter((combo) => combo.words.every((word) => (wordCounts[word] ?? 0) > 0));
+}
+
+function buildMeterLabel(magicCount: number): string {
+  if (magicCount === 0) {
+    return 'Magic meter: sleeping';
+  }
+
+  if (magicCount < 3) {
+    return 'Magic meter: warming up';
+  }
+
+  if (magicCount < 6) {
+    return 'Magic meter: sparkling';
+  }
+
+  return 'Magic meter: glowing';
+}
+
+function chooseReward(
+  wordCounts: Record<string, number>,
+  combos: MagicCombo[],
+  magicCount: number,
+): RewardCard {
+  if ((wordCounts.rain ?? 0) > 0 && (wordCounts.splash ?? 0) > 0) {
+    return REWARD_LIBRARY[1];
+  }
+
+  if ((wordCounts.moon ?? 0) > 0 && ((wordCounts.whisper ?? 0) > 0 || (wordCounts.sleepy ?? 0) > 0)) {
+    return REWARD_LIBRARY[2];
+  }
+
+  if ((wordCounts.rainbow ?? 0) > 0 || (wordCounts.happy ?? 0) > 0 || combos.length > 0) {
+    return REWARD_LIBRARY[3];
+  }
+
+  if (magicCount >= 5) {
+    return REWARD_LIBRARY[4];
+  }
+
+  return REWARD_LIBRARY[0];
+}
+
+function buildHelperMessage(
+  poem: string,
+  magicCount: number,
+  currentWord: CurrentWordPreview | null,
+  wordCounts: Record<string, number>,
+  combos: MagicCombo[],
+): string {
+  if (!poem.trim()) {
+    return 'I am Pixel, your poem pal. Try a tiny 3-line poem with moon, splash, or twinkle.';
+  }
+
+  if (currentWord?.trigger) {
+    return `${currentWord.value} is one of the magic words. Press Play My Poem to wake it up.`;
+  }
+
+  if (combos.length > 0) {
+    return `You found ${combos[0].label}. Press play for the big-screen show.`;
+  }
+
+  const partialCombo = MAGIC_COMBOS.find((combo) =>
+    combo.words.some((word) => (wordCounts[word] ?? 0) > 0) &&
+    !combo.words.every((word) => (wordCounts[word] ?? 0) > 0),
+  );
+
+  if (partialCombo) {
+    return partialCombo.hint;
+  }
+
+  if (magicCount === 0) {
+    return 'Try adding splash, whisper, rainbow, or boom for extra reactions.';
+  }
+
+  return 'Nice poem. Add one more magic word or press Play My Poem.';
+}
+
+export function analyzePoem(poem: string): PoemAnalysis {
+  const wordCounts = getWordCounts(poem);
+  const magicWords = Object.keys(wordCounts).filter((word) => getMagicWord(word));
+  const magicCount = magicWords.reduce((total, word) => total + (wordCounts[word] ?? 0), 0);
+  const currentWord = getCurrentWordPreview(poem);
+  const combos = findMagicCombos(wordCounts);
+
+  return {
+    magicCount,
+    uniqueMagicCount: magicWords.length,
+    wordCounts,
+    combos,
+    currentWord,
+    meterLabel: buildMeterLabel(magicCount),
+    meterValue: Math.min(100, Math.round((magicCount / 6) * 100)),
+    reward: chooseReward(wordCounts, combos, magicCount),
+    helperMessage: buildHelperMessage(poem, magicCount, currentWord, wordCounts, combos),
+    atmosphere: {
+      rain: (wordCounts.rain ?? 0) > 0 || combos.some((combo) => combo.id === 'rain-splash'),
+      snow: (wordCounts.snow ?? 0) > 0,
+      sun: (wordCounts.sun ?? 0) > 0,
+      moon: (wordCounts.moon ?? 0) > 0,
+      rainbow: (wordCounts.rainbow ?? 0) > 0,
+      twinkle: (wordCounts.twinkle ?? 0) > 0,
+      happy: (wordCounts.happy ?? 0) > 0,
+      sleepy: (wordCounts.sleepy ?? 0) > 0 || (wordCounts.whisper ?? 0) > 0,
+      boom: (wordCounts.boom ?? 0) > 0,
+    },
+  };
 }

@@ -5,6 +5,7 @@ interface AnimatedWordProps {
   token: ParsedToken;
   trigger: MagicWordDefinition | null;
   reducedMotion: boolean;
+  repeatCount?: number;
 }
 
 function renderDecorations(effect: string) {
@@ -71,7 +72,12 @@ function renderDecorations(effect: string) {
   }
 }
 
-export function AnimatedWord({ token, trigger, reducedMotion }: AnimatedWordProps) {
+export function AnimatedWord({
+  token,
+  trigger,
+  reducedMotion,
+  repeatCount = 1,
+}: AnimatedWordProps) {
   if (token.type === 'space') {
     return <Fragment>{token.value}</Fragment>;
   }
@@ -86,6 +92,8 @@ export function AnimatedWord({ token, trigger, reducedMotion }: AnimatedWordProp
         'poem-token',
         'poem-token--magic',
         `effect--${trigger.effect}`,
+        repeatCount > 1 ? 'poem-token--charged' : '',
+        repeatCount > 2 ? 'poem-token--super-charged' : '',
         reducedMotion ? 'effect--reduced' : '',
       ]
         .filter(Boolean)
