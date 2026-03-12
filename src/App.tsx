@@ -165,7 +165,7 @@ export default function App() {
             </div>
 
             <aside className="app-grid__right">
-              <MagicWordList words={MAGIC_WORDS.slice(0, 10)} />
+              <MagicWordList words={MAGIC_WORDS} />
               <section className="panel playback-preview">
                 <p className="panel__label">Poem Theater</p>
                 <p className="helper-text">

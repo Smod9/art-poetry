@@ -20,7 +20,13 @@ export type TriggerEffect =
   | 'grow'
   | 'tiny'
   | 'happy'
-  | 'sleepy';
+  | 'sleepy'
+  | 'flower'
+  | 'grass'
+  | 'bloom'
+  | 'seed'
+  | 'tree'
+  | 'cloud';
 
 export interface MagicWordDefinition {
   word: string;
@@ -86,5 +92,9 @@ export interface PoemAnalysis {
     happy: boolean;
     sleepy: boolean;
     boom: boolean;
+    grass: boolean;
+    cloud: boolean;
+    tree: boolean;
+    bloom: boolean;
   };
 }

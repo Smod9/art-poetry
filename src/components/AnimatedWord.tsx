@@ -59,6 +59,48 @@ function renderDecorations(effect: string) {
           ))}
         </span>
       );
+    case 'flower':
+    case 'bloom':
+      return (
+        <span className={`fx fx--${effect}`} aria-hidden="true">
+          <span className="fx__petal fx__petal--top" />
+          <span className="fx__petal fx__petal--left" />
+          <span className="fx__petal fx__petal--right" />
+          <span className="fx__center" />
+          <span className="fx__stem" />
+        </span>
+      );
+    case 'seed':
+      return (
+        <span className="fx fx--seed" aria-hidden="true">
+          <span className="fx__seed-dot" />
+          <span className="fx__seed-sprout" />
+        </span>
+      );
+    case 'tree':
+      return (
+        <span className="fx fx--tree" aria-hidden="true">
+          <span className="fx__tree-top" />
+          <span className="fx__tree-trunk" />
+        </span>
+      );
+    case 'cloud':
+      return (
+        <span className="fx fx--cloud" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </span>
+      );
+    case 'grass':
+      return (
+        <span className="fx fx--grass" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </span>
+      );
     case 'sleepy':
       return (
         <span className="fx fx--sleepy" aria-hidden="true">

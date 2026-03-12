@@ -134,6 +134,15 @@ function chooseReward(
   combos: MagicCombo[],
   magicCount: number,
 ): RewardCard {
+  if (
+    (wordCounts.flower ?? 0) > 0 ||
+    (wordCounts.grass ?? 0) > 0 ||
+    (wordCounts.seed ?? 0) > 0 ||
+    combos.some((combo) => combo.id === 'seed-grow' || combo.id === 'flower-sun')
+  ) {
+    return REWARD_LIBRARY[5];
+  }
+
   if ((wordCounts.rain ?? 0) > 0 && (wordCounts.splash ?? 0) > 0) {
     return REWARD_LIBRARY[1];
   }
@@ -161,7 +170,7 @@ function buildHelperMessage(
   combos: MagicCombo[],
 ): string {
   if (!poem.trim()) {
-    return 'I am Pixel, your poem pal. Try a tiny 3-line poem with moon, splash, or twinkle.';
+    return 'I am Pixel, your poem pal. Try a tiny 3-line poem with moon, splash, flower, or twinkle.';
   }
 
   if (currentWord?.trigger) {
@@ -182,7 +191,7 @@ function buildHelperMessage(
   }
 
   if (magicCount === 0) {
-    return 'Try adding splash, whisper, rainbow, or boom for extra reactions.';
+    return 'Try adding splash, flower, grass, whisper, rainbow, or boom for extra reactions.';
   }
 
   return 'Nice poem. Add one more magic word or press Play My Poem.';
@@ -215,6 +224,15 @@ export function analyzePoem(poem: string): PoemAnalysis {
       happy: (wordCounts.happy ?? 0) > 0,
       sleepy: (wordCounts.sleepy ?? 0) > 0 || (wordCounts.whisper ?? 0) > 0,
       boom: (wordCounts.boom ?? 0) > 0,
+      grass:
+        (wordCounts.grass ?? 0) > 0 ||
+        combos.some((combo) => combo.id === 'seed-grow' || combo.id === 'grass-rain'),
+      cloud: (wordCounts.cloud ?? 0) > 0 || combos.some((combo) => combo.id === 'cloud-rainbow'),
+      tree: (wordCounts.tree ?? 0) > 0,
+      bloom:
+        (wordCounts.bloom ?? 0) > 0 ||
+        (wordCounts.flower ?? 0) > 0 ||
+        combos.some((combo) => combo.id === 'flower-sun'),
     },
   };
 }

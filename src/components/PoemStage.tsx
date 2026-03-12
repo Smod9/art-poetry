@@ -87,6 +87,7 @@ export function PoemStage({
     poemAnalysis.atmosphere.twinkle ? 'poem-stage__screen--starry' : '',
     poemAnalysis.atmosphere.sleepy ? 'poem-stage__screen--sleepy' : '',
     poemAnalysis.atmosphere.boom ? 'poem-stage__screen--boom' : '',
+    poemAnalysis.atmosphere.grass ? 'poem-stage__screen--garden' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -128,12 +129,19 @@ export function PoemStage({
         <div className="poem-stage__atmosphere" aria-hidden="true">
           {poemAnalysis.atmosphere.sun ? <span className="poem-stage__sun" /> : null}
           {poemAnalysis.atmosphere.moon ? <span className="poem-stage__moon" /> : null}
-          {poemAnalysis.atmosphere.rain ? <span className="poem-stage__cloud poem-stage__cloud--left" /> : null}
-          {poemAnalysis.atmosphere.rain ? <span className="poem-stage__cloud poem-stage__cloud--right" /> : null}
+          {poemAnalysis.atmosphere.rain || poemAnalysis.atmosphere.cloud ? (
+            <span className="poem-stage__cloud poem-stage__cloud--left" />
+          ) : null}
+          {poemAnalysis.atmosphere.rain || poemAnalysis.atmosphere.cloud ? (
+            <span className="poem-stage__cloud poem-stage__cloud--right" />
+          ) : null}
           {poemAnalysis.atmosphere.twinkle || poemAnalysis.atmosphere.happy ? (
             <span className="poem-stage__stars" />
           ) : null}
           {poemAnalysis.atmosphere.rainbow ? <span className="poem-stage__arc" /> : null}
+          {poemAnalysis.atmosphere.tree ? <span className="poem-stage__tree" /> : null}
+          {poemAnalysis.atmosphere.grass ? <span className="poem-stage__grassline" /> : null}
+          {poemAnalysis.atmosphere.bloom ? <span className="poem-stage__flower-bed" /> : null}
         </div>
 
         {poemAnalysis.combos.length > 0 ? (

@@ -21,6 +21,12 @@ export const MAGIC_WORDS: MagicWordDefinition[] = [
   { word: 'tiny', effect: 'tiny', hint: 'shrinks playfully' },
   { word: 'happy', effect: 'happy', hint: 'smiley sparkles and confetti' },
   { word: 'sleepy', effect: 'sleepy', hint: 'drifting Zs and soft dots' },
+  { word: 'flower', effect: 'flower', hint: 'a tiny flower pops open' },
+  { word: 'grass', effect: 'grass', hint: 'green grass grows from the ground', stageBurst: true },
+  { word: 'bloom', effect: 'bloom', hint: 'blossoms wide and bright' },
+  { word: 'seed', effect: 'seed', hint: 'a little seed drops and sprouts' },
+  { word: 'tree', effect: 'tree', hint: 'a tiny tree grows up' },
+  { word: 'cloud', effect: 'cloud', hint: 'a puffy cloud drifts by', stageBurst: true },
 ];
 
 export const MAGIC_WORD_MAP = Object.fromEntries(
@@ -34,4 +40,5 @@ export const PROMPTS: PromptItem[] = [
   { id: 'ocean', text: 'Write about the ocean using splash and wave.' },
   { id: 'three-line', text: 'Write a 3-line poem using splash, moon, and whisper.' },
   { id: 'sunny', text: 'Write about a rainbow under a happy sun.' },
+  { id: 'garden', text: 'Write about a garden with seed, flower, grass, and cloud.' },
 ];

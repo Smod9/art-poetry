@@ -41,4 +41,9 @@ export const EXAMPLE_POEMS: ExamplePoem[] = [
     title: 'Spin Cat',
     text: `my cat will spin\nthen bounce on the rug\nand fall into a nap`,
   },
+  {
+    id: 'garden-song',
+    title: 'Garden Song',
+    text: `seed in the grass\nflower bloom in the sun\ncloud above the tree`,
+  },
 ];
