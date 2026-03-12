@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { PoemAnalysis } from '../types';
 import { parsePoemLines, getMagicWord, buildRewardMessage, analyzePoem } from '../utils/poem';
 import { AnimatedWord } from './AnimatedWord';
@@ -10,6 +10,8 @@ interface PoemStageProps {
   onPlaybackDone: (reward: string) => void;
   variant?: 'inline' | 'modal';
   analysis?: PoemAnalysis;
+  loopPlayback?: boolean;
+  paused?: boolean;
 }
 
 export function PoemStage({
@@ -19,10 +21,20 @@ export function PoemStage({
   onPlaybackDone,
   variant = 'inline',
   analysis,
+  loopPlayback = false,
+  paused = false,
 }: PoemStageProps) {
   const parsedLines = useMemo(() => parsePoemLines(poem), [poem]);
   const poemAnalysis = useMemo(() => analysis ?? analyzePoem(poem), [analysis, poem]);
   const [visibleLines, setVisibleLines] = useState(0);
+  const [cycleVersion, setCycleVersion] = useState(0);
+  const completedCycleRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    setVisibleLines(0);
+    setCycleVersion(0);
+    completedCycleRef.current = null;
+  }, [playVersion, poem]);
 
   useEffect(() => {
     if (playVersion === 0 && !poem.trim()) {
@@ -36,34 +48,51 @@ export function PoemStage({
       return;
     }
 
-    setVisibleLines(0);
-    let cancelled = false;
-    const timers: number[] = [];
-    const lineDelay = reducedMotion ? 180 : 500;
+    if (paused) {
+      return;
+    }
 
-    parsedLines.forEach((_, index) => {
-      const timer = window.setTimeout(() => {
-        if (!cancelled) {
-          setVisibleLines(index + 1);
-        }
-      }, lineDelay * index + 80);
+    const lineDelay = reducedMotion ? 320 : 920;
+    const revealDelay = visibleLines === 0 ? 80 : lineDelay;
+    const cycleKey = `${playVersion}-${cycleVersion}`;
 
-      timers.push(timer);
-    });
+    if (visibleLines < parsedLines.length) {
+      const revealTimer = window.setTimeout(() => {
+        setVisibleLines((current) => Math.min(current + 1, parsedLines.length));
+      }, revealDelay);
 
-    const endTimer = window.setTimeout(() => {
-      if (!cancelled) {
-        onPlaybackDone(buildRewardMessage(poem));
-      }
-    }, lineDelay * parsedLines.length + 250);
+      return () => window.clearTimeout(revealTimer);
+    }
 
-    timers.push(endTimer);
+    if (completedCycleRef.current !== cycleKey) {
+      completedCycleRef.current = cycleKey;
+      onPlaybackDone(buildRewardMessage(poem));
+    }
+
+    if (!loopPlayback) {
+      return;
+    }
+
+    const restartTimer = window.setTimeout(() => {
+      completedCycleRef.current = null;
+      setVisibleLines(0);
+      setCycleVersion((value) => value + 1);
+    }, reducedMotion ? 1000 : cycleVersion === 0 ? 3000 : 1600);
 
     return () => {
-      cancelled = true;
-      timers.forEach((timer) => window.clearTimeout(timer));
+      window.clearTimeout(restartTimer);
     };
-  }, [onPlaybackDone, parsedLines, playVersion, poem, reducedMotion]);
+  }, [
+    cycleVersion,
+    loopPlayback,
+    onPlaybackDone,
+    parsedLines,
+    paused,
+    playVersion,
+    poem,
+    reducedMotion,
+    visibleLines,
+  ]);
 
   const stageEffects = useMemo(() => {
     const found = new Set<string>();
@@ -156,7 +185,7 @@ export function PoemStage({
 
         {stageEffects.map((effect) => (
           <span
-            key={`${effect}-${playVersion}`}
+            key={`${effect}-${playVersion}-${cycleVersion}`}
             className={`stage-burst stage-burst--${effect}`}
             aria-hidden="true"
           />
@@ -172,12 +201,12 @@ export function PoemStage({
               ]
                 .filter(Boolean)
                 .join(' ')}
-              key={`${playVersion}-${lineIndex}`}
+              key={`${playVersion}-${cycleVersion}-${lineIndex}`}
             >
               {lineIndex < visibleLines
                 ? line.map((token, tokenIndex) => (
                     <AnimatedWord
-                      key={`${playVersion}-${lineIndex}-${tokenIndex}-${token.value}`}
+                      key={`${playVersion}-${cycleVersion}-${lineIndex}-${tokenIndex}-${token.value}`}
                       token={token}
                       trigger={getMagicWord(token.normalized)}
                       reducedMotion={reducedMotion}

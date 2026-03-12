@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PoemAnalysis } from '../types';
 import { PoemStage } from './PoemStage';
 
@@ -25,6 +25,8 @@ export function PlaybackModal({
   onClose,
   onPlaybackDone,
 }: PlaybackModalProps) {
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
     if (!open) {
       return;
@@ -46,6 +48,12 @@ export function PlaybackModal({
     };
   }, [onClose, open]);
 
+  useEffect(() => {
+    if (open) {
+      setPaused(false);
+    }
+  }, [open, playVersion]);
+
   if (!open) {
     return null;
   }
@@ -66,11 +74,21 @@ export function PlaybackModal({
             <p className="poem-stage__status">Big-screen poem magic.</p>
           </div>
           <div className="playback-modal__actions">
+            <button
+              className="button button--secondary"
+              onClick={() => setPaused((value) => !value)}
+              type="button"
+            >
+              <span className="button__icon" aria-hidden="true">{paused ? '▶' : '⏸'}</span>
+              <span>{paused ? 'Resume' : 'Pause'}</span>
+            </button>
             <button className="button button--secondary" onClick={onReplay} type="button">
-              Read It Again
+              <span className="button__icon" aria-hidden="true">↺</span>
+              <span>Read It Again</span>
             </button>
             <button className="button" onClick={onClose} type="button">
-              Close
+              <span className="button__icon" aria-hidden="true">✕</span>
+              <span>Close</span>
             </button>
           </div>
         </div>
@@ -82,6 +100,8 @@ export function PlaybackModal({
           onPlaybackDone={onPlaybackDone}
           variant="modal"
           analysis={analysis}
+          loopPlayback
+          paused={paused}
         />
 
         <section className="playback-modal__footer">

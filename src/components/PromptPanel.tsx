@@ -15,10 +15,12 @@ export function PromptPanel({ prompt, onSurpriseMe, onNextPrompt }: PromptPanelP
       </div>
       <div className="prompt-panel__actions">
         <button className="button" onClick={onSurpriseMe} type="button">
-          Surprise Me
+          <span className="button__icon" aria-hidden="true">🎁</span>
+          <span>Surprise Me</span>
         </button>
         <button className="button button--secondary" onClick={onNextPrompt} type="button">
-          Another Prompt
+          <span className="button__icon" aria-hidden="true">↻</span>
+          <span>Another Prompt</span>
         </button>
       </div>
     </section>

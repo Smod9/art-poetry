@@ -27,7 +27,8 @@ export function TitleScreen({ onStart }: TitleScreenProps) {
       </div>
 
       <button className="button button--hero" onClick={onStart} type="button">
-        Press Start
+        <span className="button__icon" aria-hidden="true">▶</span>
+        <span>Press Start</span>
       </button>
       <p className="title-screen__hint">Big buttons. No login. Just poems and tiny magic.</p>
     </section>

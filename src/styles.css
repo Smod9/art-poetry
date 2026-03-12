@@ -210,6 +210,10 @@ textarea {
 }
 
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   min-height: 50px;
   padding: 12px 18px;
   border: 3px solid var(--border);
@@ -221,6 +225,14 @@ textarea {
   cursor: pointer;
   transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
   box-shadow: 0 4px 0 rgba(58, 85, 102, 0.2);
+}
+
+.button__icon {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.1em;
+  font-size: 1.05em;
+  line-height: 1;
 }
 
 .button:hover {
@@ -1040,6 +1052,56 @@ textarea {
   z-index: 1;
 }
 
+.poem-token__text--rainbow-arched {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.01em;
+  text-shadow: none;
+}
+
+.poem-token__letter {
+  display: inline-block;
+}
+
+.poem-token__letter:nth-child(5n + 1) {
+  color: #ff7ea8;
+}
+
+.poem-token__letter:nth-child(5n + 2) {
+  color: #f7b64d;
+}
+
+.poem-token__letter:nth-child(5n + 3) {
+  color: #f7d96e;
+}
+
+.poem-token__letter:nth-child(5n + 4) {
+  color: #65c96f;
+}
+
+.poem-token__letter:nth-child(5n + 5) {
+  color: #89d8ff;
+}
+
+.poem-token__letter:nth-child(1),
+.poem-token__letter:nth-last-child(1) {
+  transform: translateY(0.22em);
+}
+
+.poem-token__letter:nth-child(2),
+.poem-token__letter:nth-last-child(2) {
+  transform: translateY(0.1em);
+}
+
+.poem-token__letter:nth-child(3),
+.poem-token__letter:nth-last-child(3) {
+  transform: translateY(0.02em);
+}
+
+.poem-token__letter:nth-child(4) {
+  transform: translateY(-0.06em);
+}
+
 .stage-burst,
 .fx {
   position: absolute;
@@ -1230,6 +1292,10 @@ textarea {
 .effect--moon,
 .effect--rainbow {
   animation: glowBlink 1100ms ease-out;
+}
+
+.effect--rainbow .poem-token__text--rainbow-arched {
+  animation: rainbowWordArc 1100ms ease-out;
 }
 
 .fx--droplets,
@@ -1971,6 +2037,21 @@ textarea {
   100% {
     opacity: 1;
     transform: translateX(-50%) scaleX(1);
+  }
+}
+
+@keyframes rainbowWordArc {
+  0% {
+    opacity: 0.55;
+    transform: translateY(0.08em) scaleX(0.92);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(-0.02em) scaleX(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1);
   }
 }
 

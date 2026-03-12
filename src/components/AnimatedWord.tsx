@@ -114,6 +114,22 @@ function renderDecorations(effect: string) {
   }
 }
 
+function renderWordText(value: string, effect: string) {
+  if (effect === 'rainbow') {
+    return (
+      <span className="poem-token__text poem-token__text--rainbow-arched" aria-label={value}>
+        {value.split('').map((letter, index) => (
+          <span className="poem-token__letter" key={`${letter}-${index}`}>
+            {letter}
+          </span>
+        ))}
+      </span>
+    );
+  }
+
+  return <span className="poem-token__text">{value}</span>;
+}
+
 export function AnimatedWord({
   token,
   trigger,
@@ -141,7 +157,7 @@ export function AnimatedWord({
         .filter(Boolean)
         .join(' ')}
     >
-      <span className="poem-token__text">{token.value}</span>
+      {renderWordText(token.value, trigger.effect)}
       {renderDecorations(trigger.effect)}
     </span>
   );

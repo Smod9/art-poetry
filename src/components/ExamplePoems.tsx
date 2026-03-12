@@ -17,7 +17,7 @@ export function ExamplePoems({ poems, onLoadPoem }: ExamplePoemsProps) {
             onClick={() => onLoadPoem(poem)}
             type="button"
           >
-            <span className="example-card__title">{poem.title}</span>
+            <span className="example-card__title">✦ {poem.title}</span>
             <span className="example-card__preview">{poem.text.split('\n')[0]}</span>
           </button>
         ))}

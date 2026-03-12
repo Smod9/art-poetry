@@ -128,10 +128,12 @@ export default function App() {
                 onClick={() => setSoundEnabled((value) => !value)}
                 type="button"
               >
-                {soundEnabled ? 'Speaker On' : 'Speaker Off'}
+                <span className="button__icon" aria-hidden="true">{soundEnabled ? '🔊' : '🔈'}</span>
+                <span>{soundEnabled ? 'Speaker On' : 'Speaker Off'}</span>
               </button>
               <button className="button button--secondary" onClick={() => setScreen('title')} type="button">
-                Title Screen
+                <span className="button__icon" aria-hidden="true">⌂</span>
+                <span>Title Screen</span>
               </button>
             </div>
           </header>

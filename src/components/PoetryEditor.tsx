@@ -56,13 +56,16 @@ export function PoetryEditor({
 
       <div className="editor-panel__actions">
         <button className="button button--hero" onClick={onPlay} type="button">
-          Play My Poem
+          <span className="button__icon" aria-hidden="true">▶</span>
+          <span>Play My Poem</span>
         </button>
         <button className="button" onClick={onClear} type="button">
-          Clear
+          <span className="button__icon" aria-hidden="true">⌫</span>
+          <span>Clear</span>
         </button>
         <button className="button button--secondary" onClick={onTryExample} type="button">
-          Try an Example
+          <span className="button__icon" aria-hidden="true">✨</span>
+          <span>Try an Example</span>
         </button>
       </div>
 
@@ -78,7 +81,8 @@ export function PoetryEditor({
 
           <div className="editor-panel__mini-actions">
             <button className="button button--secondary" onClick={onToggleTheme} type="button">
-              Theme: {themeLabel}
+              <span className="button__icon" aria-hidden="true">🎨</span>
+              <span>Theme: {themeLabel}</span>
             </button>
           </div>
         </div>
