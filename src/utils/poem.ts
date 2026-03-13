@@ -36,11 +36,24 @@ export function tokenizeLine(line: string): ParsedToken[] {
 }
 
 export function getMagicWord(normalized: string | null): MagicWordDefinition | null {
+  const match = getMagicWordKey(normalized);
+  return match ? MAGIC_WORD_MAP[match] : null;
+}
+
+export function getMagicWordKey(normalized: string | null): string | null {
   if (!normalized) {
     return null;
   }
 
-  return MAGIC_WORD_MAP[normalized] ?? null;
+  if (MAGIC_WORD_MAP[normalized]) {
+    return normalized;
+  }
+
+  const match = Object.keys(MAGIC_WORD_MAP)
+    .filter((word) => normalized.includes(word))
+    .sort((left, right) => right.length - left.length)[0];
+
+  return match ?? null;
 }
 
 export function countMagicWords(poem: string): number {
@@ -78,7 +91,8 @@ export function getWordCounts(poem: string): Record<string, number> {
         return counts;
       }
 
-      counts[token.normalized] = (counts[token.normalized] ?? 0) + 1;
+      const countKey = getMagicWordKey(token.normalized) ?? token.normalized;
+      counts[countKey] = (counts[countKey] ?? 0) + 1;
       return counts;
     }, {});
 }

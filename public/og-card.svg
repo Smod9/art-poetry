@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Magic Words social card</title>
+  <desc id="desc">A retro classroom-style card for Magic Words with the app logo and cheerful poetry text.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8e9bf" />
+      <stop offset="55%" stop-color="#fff8e8" />
+      <stop offset="100%" stop-color="#dff6f8" />
+    </linearGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffef6" stop-opacity="0.98" />
+      <stop offset="100%" stop-color="#f4ecd5" stop-opacity="0.98" />
+    </linearGradient>
+    <linearGradient id="screen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c7f3ee" />
+      <stop offset="100%" stop-color="#9fdae6" />
+    </linearGradient>
+    <pattern id="scanlines" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="4" fill="#ffffff" opacity="0.03" />
+      <rect y="4" width="8" height="4" fill="#000000" opacity="0.03" />
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" rx="40" fill="url(#bg)" />
+  <circle cx="1040" cy="110" r="92" fill="#f7d96e" opacity="0.38" />
+  <circle cx="1120" cy="510" r="96" fill="#89d8ff" opacity="0.35" />
+  <circle cx="120" cy="520" r="84" fill="#ff7ea8" opacity="0.22" />
+
+  <rect x="54" y="48" width="1092" height="534" rx="36" fill="url(#panel)" stroke="#3a5566" stroke-width="8" />
+  <rect x="84" y="82" width="1032" height="466" rx="28" fill="#fff9ea" stroke="#3a5566" stroke-width="4" />
+
+  <g transform="translate(108 108)">
+    <rect width="178" height="178" rx="32" fill="#f8e9bf" />
+    <rect x="16" y="16" width="146" height="146" rx="28" fill="#fff8e8" stroke="#3a5566" stroke-width="10" />
+    <rect x="38" y="38" width="102" height="74" rx="14" fill="url(#screen)" stroke="#1b5262" stroke-width="8" />
+    <rect x="38" y="38" width="102" height="74" rx="14" fill="url(#scanlines)" />
+    <path d="M46 96c14-27 28-38 43-38s29 11 43 38" fill="none" stroke="#ff7ea8" stroke-width="8" stroke-linecap="round" />
+    <path d="M50 101c12-20 25-29 39-29s27 9 39 29" fill="none" stroke="#f7d96e" stroke-width="8" stroke-linecap="round" />
+    <path d="M54 106c11-12 22-18 35-18s24 6 35 18" fill="none" stroke="#89d8ff" stroke-width="8" stroke-linecap="round" />
+    <circle cx="65" cy="136" r="8" fill="#ff7ea8" />
+    <circle cx="89" cy="136" r="8" fill="#f7d96e" />
+    <circle cx="113" cy="136" r="8" fill="#65c96f" />
+  </g>
+
+  <text x="330" y="168" fill="#5f7384" font-family="'Courier New', monospace" font-size="28" letter-spacing="5">MAGIC WORDS</text>
+  <text x="330" y="250" fill="#153d53" font-family="'Trebuchet MS', 'Avenir Next', sans-serif" font-size="84" font-weight="700">A tiny poetry toy</text>
+  <text x="330" y="332" fill="#153d53" font-family="'Trebuchet MS', 'Avenir Next', sans-serif" font-size="84" font-weight="700">with retro magic.</text>
+
+  <text x="332" y="404" fill="#4f6674" font-family="'Trebuchet MS', 'Avenir Next', sans-serif" font-size="34">
+    Write a short poem. Watch words splash, twinkle, bloom, and rainbow.
+  </text>
+
+  <g transform="translate(332 450)">
+    <rect x="0" y="0" width="172" height="54" rx="27" fill="#fffef6" stroke="#3a5566" stroke-width="4" />
+    <text x="28" y="35" fill="#153d53" font-family="'Courier New', monospace" font-size="26" font-weight="700">splash</text>
+
+    <rect x="194" y="0" width="178" height="54" rx="27" fill="#fff7fd" stroke="#3a5566" stroke-width="4" />
+    <text x="228" y="35" fill="#153d53" font-family="'Courier New', monospace" font-size="26" font-weight="700">twinkle</text>
+
+    <rect x="394" y="0" width="180" height="54" rx="27" fill="#f2fcff" stroke="#3a5566" stroke-width="4" />
+    <text x="435" y="35" fill="#153d53" font-family="'Courier New', monospace" font-size="26" font-weight="700">flower</text>
+
+    <rect x="596" y="0" width="194" height="54" rx="27" fill="#fff9ea" stroke="#3a5566" stroke-width="4" />
+    <text x="641" y="35" fill="#153d53" font-family="'Courier New', monospace" font-size="26" font-weight="700">rainbow</text>
+  </g>
+
+  <g transform="translate(86 516)">
+    <text x="0" y="0" fill="#5f7384" font-family="'Courier New', monospace" font-size="24" letter-spacing="3">artpoem.ca</text>
+  </g>
+</svg>

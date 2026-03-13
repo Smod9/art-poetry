@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { PoemAnalysis } from '../types';
-import { parsePoemLines, getMagicWord, buildRewardMessage, analyzePoem } from '../utils/poem';
+import {
+  parsePoemLines,
+  getMagicWord,
+  getMagicWordKey,
+  buildRewardMessage,
+  analyzePoem,
+} from '../utils/poem';
 import { AnimatedWord } from './AnimatedWord';
 
 interface PoemStageProps {
@@ -106,8 +112,8 @@ export function PoemStage({
     const nextWord = timedLines.wordSequence[visibleWords];
     const previousWord = visibleWords > 0 ? timedLines.wordSequence[visibleWords - 1] : null;
     const changedLine = previousWord && nextWord && previousWord.lineIndex !== nextWord.lineIndex;
-    const wordDelay = reducedMotion ? 240 : 440;
-    const revealDelay = visibleWords === 0 ? 140 : wordDelay + (changedLine ? 180 : 0);
+    const wordDelay = reducedMotion ? 220 : 360;
+    const revealDelay = visibleWords === 0 ? 120 : wordDelay + (changedLine ? 140 : 0);
     const cycleKey = `${playVersion}-${cycleVersion}`;
 
     if (visibleWords < timedLines.totalWords) {
@@ -177,7 +183,9 @@ export function PoemStage({
 
   function getLineClasses(lineIndex: number) {
     const line = parsedLines[lineIndex];
-    const words = line.map((token) => token.normalized).filter(Boolean);
+    const words = line
+      .map((token) => getMagicWordKey(token.normalized) ?? token.normalized)
+      .filter(Boolean);
 
     return [
       words.includes('wave') ? 'poem-line--wave-line' : '',
@@ -304,7 +312,11 @@ export function PoemStage({
                       trigger={getMagicWord(token.normalized)}
                       reducedMotion={reducedMotion}
                       repeatCount={
-                        token.normalized ? poemAnalysis.wordCounts[token.normalized] ?? 1 : 1
+                        token.normalized
+                          ? poemAnalysis.wordCounts[
+                              getMagicWordKey(token.normalized) ?? token.normalized
+                            ] ?? 1
+                          : 1
                       }
                     />
                     ))
