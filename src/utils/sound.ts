@@ -7,10 +7,15 @@ const AUDIO_LOOKUP = window.AudioContext || (window as typeof window & {
 class RetroMusicLoop {
   private context: AudioContextLike | null = null;
   private masterGain: GainNode | null = null;
+  private musicGain: GainNode | null = null;
+  private sfxGain: GainNode | null = null;
+  private compressor: DynamicsCompressorNode | null = null;
   private schedulerId: number | null = null;
   private step = 0;
   private nextNoteTime = 0;
-  private readonly masterVolume = 0.035;
+  private readonly masterVolume = 0.92;
+  private readonly musicVolume = 0.95;
+  private readonly sfxVolume = 1.25;
   private readonly lookAhead = 0.12;
   private readonly scheduleEveryMs = 80;
   private readonly noteLength = 0.28;
@@ -33,8 +38,21 @@ class RetroMusicLoop {
     if (!this.context) {
       this.context = new AUDIO_LOOKUP();
       this.masterGain = this.context.createGain();
+      this.musicGain = this.context.createGain();
+      this.sfxGain = this.context.createGain();
+      this.compressor = this.context.createDynamicsCompressor();
       this.masterGain.gain.value = this.masterVolume;
-      this.masterGain.connect(this.context.destination);
+      this.musicGain.gain.value = this.musicVolume;
+      this.sfxGain.gain.value = this.sfxVolume;
+      this.musicGain.connect(this.masterGain);
+      this.sfxGain.connect(this.masterGain);
+      this.compressor.threshold.value = -24;
+      this.compressor.knee.value = 18;
+      this.compressor.ratio.value = 3;
+      this.compressor.attack.value = 0.01;
+      this.compressor.release.value = 0.2;
+      this.masterGain.connect(this.compressor);
+      this.compressor.connect(this.context.destination);
     }
 
     if (this.context.state === 'suspended') {
@@ -94,11 +112,11 @@ class RetroMusicLoop {
       const bassNote = this.bass[this.step % this.bass.length];
       const accent = this.step % 4 === 0;
 
-      this.playVoice(melodyNote, this.nextNoteTime, this.noteLength, 'square', accent ? 0.028 : 0.02);
-      this.playVoice(bassNote, this.nextNoteTime, this.noteLength * 0.9, 'triangle', 0.018);
+      this.playVoice(melodyNote, this.nextNoteTime, this.noteLength, 'square', accent ? 0.22 : 0.16);
+      this.playVoice(bassNote, this.nextNoteTime, this.noteLength * 0.9, 'triangle', 0.11);
 
       if (this.step % 2 === 1) {
-        this.playVoice(melodyNote / 2, this.nextNoteTime + 0.02, 0.08, 'square', 0.01);
+        this.playVoice(melodyNote / 2, this.nextNoteTime + 0.02, 0.08, 'square', 0.075);
       }
 
       this.nextNoteTime += this.noteLength;
@@ -112,13 +130,15 @@ class RetroMusicLoop {
     duration: number,
     type: OscillatorType,
     volume: number,
+    channel: 'music' | 'sfx' = 'music',
   ) {
-    if (!this.context || !this.masterGain) {
+    if (!this.context || !this.masterGain || !this.musicGain || !this.sfxGain) {
       return;
     }
 
     const oscillator = this.context.createOscillator();
     const gain = this.context.createGain();
+    const destination = channel === 'sfx' ? this.sfxGain : this.musicGain;
 
     oscillator.type = type;
     oscillator.frequency.setValueAtTime(frequency, startTime);
@@ -128,7 +148,7 @@ class RetroMusicLoop {
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
     oscillator.connect(gain);
-    gain.connect(this.masterGain);
+    gain.connect(destination);
     oscillator.start(startTime);
     oscillator.stop(startTime + duration + 0.02);
   }
@@ -143,9 +163,9 @@ class RetroMusicLoop {
 
     notes.forEach((note, index) => {
       const time = startAt + index * 0.12;
-      this.playVoice(note, time, 0.12, 'square', 0.018);
+      this.playVoice(note, time, 0.12, 'square', 0.16, 'sfx');
       if (index > 0) {
-        this.playVoice(note / 2, time, 0.1, 'triangle', 0.01);
+        this.playVoice(note / 2, time, 0.1, 'triangle', 0.09, 'sfx');
       }
     });
   }

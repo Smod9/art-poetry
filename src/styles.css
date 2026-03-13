@@ -410,10 +410,22 @@ textarea {
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+.editor-panel__actions {
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.editor-panel__actions .button {
+  flex: 0 1 auto;
+}
+
 .editor-panel__extras {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
   gap: 14px;
+  margin-top: 14px;
 }
 
 .editor-panel__mini-actions {

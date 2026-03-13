@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from 'react';
 import { CurrentWordPreview } from '../types';
 import { HelperBuddy } from './HelperBuddy';
 import { MagicTypingPreview } from './MagicTypingPreview';
@@ -31,6 +32,13 @@ export function PoetryEditor({
   meterLabel,
   currentWord,
 }: PoetryEditorProps) {
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+      event.preventDefault();
+      onPlay();
+    }
+  }
+
   return (
     <section className="panel editor-panel">
       <div className="panel__row">
@@ -49,6 +57,7 @@ export function PoetryEditor({
         className="poem-input"
         id="poem-input"
         onChange={(event) => onPoemChange(event.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={'moon says hello\nrain taps the roof\nsplash goes my boot'}
         rows={7}
         value={poem}

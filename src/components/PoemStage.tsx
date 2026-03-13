@@ -14,6 +14,19 @@ interface PoemStageProps {
   paused?: boolean;
 }
 
+interface RevealedLineToken {
+  value: string;
+  type: 'word' | 'space' | 'punctuation';
+  normalized: string | null;
+  revealAt: number;
+}
+
+interface TimedLine {
+  tokens: RevealedLineToken[];
+  firstRevealAt: number;
+  wordCount: number;
+}
+
 export function PoemStage({
   poem,
   playVersion,
@@ -26,24 +39,62 @@ export function PoemStage({
 }: PoemStageProps) {
   const parsedLines = useMemo(() => parsePoemLines(poem), [poem]);
   const poemAnalysis = useMemo(() => analysis ?? analyzePoem(poem), [analysis, poem]);
-  const [visibleLines, setVisibleLines] = useState(0);
+  const [visibleWords, setVisibleWords] = useState(0);
   const [cycleVersion, setCycleVersion] = useState(0);
   const completedCycleRef = useRef<string | null>(null);
+  const timedLines = useMemo(() => {
+    let globalWordIndex = 0;
+    const wordSequence: Array<{ lineIndex: number }> = [];
+
+    const lines: TimedLine[] = parsedLines.map((line, lineIndex) => {
+      const lineWordCount = line.filter((token) => token.type === 'word').length;
+      const firstRevealAt = lineWordCount > 0 ? globalWordIndex + 1 : globalWordIndex;
+      let currentRevealAt = firstRevealAt;
+      let seenWord = false;
+
+      const tokens = line.map((token) => {
+        if (token.type === 'word') {
+          globalWordIndex += 1;
+          currentRevealAt = globalWordIndex;
+          seenWord = true;
+          wordSequence.push({ lineIndex });
+          return { ...token, revealAt: currentRevealAt };
+        }
+
+        return {
+          ...token,
+          revealAt: seenWord || lineWordCount === 0 ? currentRevealAt : firstRevealAt,
+        };
+      });
+
+      return {
+        tokens,
+        firstRevealAt,
+        wordCount: lineWordCount,
+      };
+    });
+
+    return {
+      lines,
+      totalWords: globalWordIndex,
+      wordSequence,
+    };
+  }, [parsedLines]);
 
   useEffect(() => {
-    setVisibleLines(0);
+    setVisibleWords(0);
     setCycleVersion(0);
     completedCycleRef.current = null;
   }, [playVersion, poem]);
 
   useEffect(() => {
     if (playVersion === 0 && !poem.trim()) {
-      setVisibleLines(0);
+      setVisibleWords(0);
       return;
     }
 
     if (!poem.trim()) {
-      setVisibleLines(0);
+      setVisibleWords(0);
       onPlaybackDone(buildRewardMessage(poem));
       return;
     }
@@ -52,13 +103,16 @@ export function PoemStage({
       return;
     }
 
-    const lineDelay = reducedMotion ? 320 : 920;
-    const revealDelay = visibleLines === 0 ? 80 : lineDelay;
+    const nextWord = timedLines.wordSequence[visibleWords];
+    const previousWord = visibleWords > 0 ? timedLines.wordSequence[visibleWords - 1] : null;
+    const changedLine = previousWord && nextWord && previousWord.lineIndex !== nextWord.lineIndex;
+    const wordDelay = reducedMotion ? 240 : 440;
+    const revealDelay = visibleWords === 0 ? 140 : wordDelay + (changedLine ? 180 : 0);
     const cycleKey = `${playVersion}-${cycleVersion}`;
 
-    if (visibleLines < parsedLines.length) {
+    if (visibleWords < timedLines.totalWords) {
       const revealTimer = window.setTimeout(() => {
-        setVisibleLines((current) => Math.min(current + 1, parsedLines.length));
+        setVisibleWords((current) => Math.min(current + 1, timedLines.totalWords));
       }, revealDelay);
 
       return () => window.clearTimeout(revealTimer);
@@ -75,7 +129,7 @@ export function PoemStage({
 
     const restartTimer = window.setTimeout(() => {
       completedCycleRef.current = null;
-      setVisibleLines(0);
+      setVisibleWords(0);
       setCycleVersion((value) => value + 1);
     }, reducedMotion ? 1000 : cycleVersion === 0 ? 3000 : 1600);
 
@@ -86,12 +140,12 @@ export function PoemStage({
     cycleVersion,
     loopPlayback,
     onPlaybackDone,
-    parsedLines,
     paused,
     playVersion,
     poem,
     reducedMotion,
-    visibleLines,
+    timedLines,
+    visibleWords,
   ]);
 
   const stageEffects = useMemo(() => {
@@ -229,19 +283,21 @@ export function PoemStage({
         ))}
 
         {poem.trim() ? (
-          parsedLines.map((line, lineIndex) => (
+          timedLines.lines.map((line, lineIndex) => (
             <p
               className={[
                 'poem-line',
-                lineIndex < visibleLines ? 'poem-line--visible' : '',
+                visibleWords >= line.firstRevealAt ? 'poem-line--visible' : '',
                 getLineClasses(lineIndex),
               ]
                 .filter(Boolean)
                 .join(' ')}
               key={`${playVersion}-${cycleVersion}-${lineIndex}`}
             >
-              {lineIndex < visibleLines
-                ? line.map((token, tokenIndex) => (
+              {visibleWords >= line.firstRevealAt
+                ? line.tokens
+                    .filter((token) => token.revealAt <= visibleWords)
+                    .map((token, tokenIndex) => (
                     <AnimatedWord
                       key={`${playVersion}-${cycleVersion}-${lineIndex}-${tokenIndex}-${token.value}`}
                       token={token}
@@ -251,7 +307,7 @@ export function PoemStage({
                         token.normalized ? poemAnalysis.wordCounts[token.normalized] ?? 1 : 1
                       }
                     />
-                  ))
+                    ))
                 : '\u00A0'}
             </p>
           ))
